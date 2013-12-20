@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Mail migration : Python functions to help when migrating email accounts (requires Apple's Mail.app)." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Mail migration</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/yig/mail_migration">View on GitHub</a>
+
+          <h1 id="project_title">Mail migration</h1>
+          <h2 id="project_tagline">Python functions to help when migrating email accounts (requires Apple's Mail.app).</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/yig/mail_migration/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/yig/mail_migration/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>Do you ever migrate email addresses, and you want to take all your messages with you?
+If you're like me, you can do most of it with Apple Mail.
+Create a new account, create same-named folders, and then folder-by-folder
+select all messages and copy (option-drag) them to the new account.
+But sometimes, partway through copying a folder full of thousands of messages,
+Mail halts with an error or crashes.</p>
+
+<p>The functions in this python script can take over from a partially completed migration,
+copying or moving messages from one folder to another without creating duplicates.
+They can do basic rate limiting, too.</p>
+
+<p>The script is Python 2.x and depends on the <code>appscript</code> AppleEvents bridge.
+You can install <code>appscript</code> with <code>easy_install</code> or <code>pip</code>:</p>
+
+<pre><code>sudo pip-2.7 install appscript
+</code></pre>
+
+<p>To use it:</p>
+
+<pre><code>import mail_migration
+
+## NOTE: mail_migration operates in dry-run mode until you set harmful to True:
+# mail_migration.harmful = True
+
+mail_migration.duplicate_mailbox( ('slackworks', 'travel'), ('gmail', 'travel') )
+
+## or
+
+mail_migration.duplicate_mailbox( ('ghostinthekell@gmail', u'[Gmail]/All Mail'), ('respectable@gmail', u'[Gmail]/All Mail' ) )
+
+## To do rate limiting, which can prevent server-imposed hangs, you can do
+import time
+mail_migration.duplicate_mailbox( ('ghostinthekell@gmail', u'[Gmail]/All Mail'), ('respectable@gmail', u'[Gmail]/All Mail' ), limit = 8, action = lambda: time.sleep(3) )
+</code></pre>
+
+<p>If you want to find out what your accounts and folders are called, use <code>appscript</code> directly:</p>
+
+<pre><code>import appscript
+from pprint import pprint
+
+Mail = appscript.app('Mail')
+
+pprint( Mail.accounts.get() )
+
+pprint( Mail.accounts['slackworks'].mailboxes.get() )
+pprint( Mail.accounts['gmail'].mailboxes.get() )
+</code></pre>
+
+<hr><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>I, the author, dedicate this work to the Public Domain.
+<a href="http://creativecommons.org/publicdomain/zero/1.0/">http://creativecommons.org/publicdomain/zero/1.0/</a></p>
+
+<p>This software is provided "as is", without warranty of any kind, express or
+implied.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Mail migration maintained by <a href="https://github.com/yig">yig</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
